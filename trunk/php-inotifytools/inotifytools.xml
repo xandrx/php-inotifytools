@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<extension name="inotifytools" version="0.1.0">
+ <license>PHP</license>
+ <summary>libinotifytools wrapper</summary>
+ <maintainer>
+  <user>freewizard</user>
+  <name>Du Song</name>
+  <email>freewizard@gmail.com</email>
+  <role>developer</role>
+ </maintainer>
+ <release>
+  <version>0.1</version>
+  <date>2007-11-29</date>
+  <state>stable</state>
+  <notes>
+   The sample extension is not threadsafe.
+  </notes>
+ </release>
+ <changelog>
+  <release>
+   <version>0.1</version>
+   <date>2007-11-29</date>
+   <state>alpha</state>
+   <notes>First alpha version</notes>
+  </release>
+ </changelog>
+ <deps language="c">
+  <with defaults='/usr:/usr/local' testfile='include/inotifytools/inotifytools.h' name="inotifytools">
+   <header name="inotifytools/inotifytools.h" />
+   <header name="inotifytools/inotify.h" />
+   <lib name="inotifytools" platform="all" />
+  </with>
+ </deps>
+ <code position="top">
+<![CDATA[
+  /* #include <sys/inotify.h> */
+]]>
+ </code>
+ <constant name="IN_ACCESS" type="int" value="IN_ACCESS"/>
+ <constant name="IN_ATTRIB" type="int" value="IN_ATTRIB"/>
+ <constant name="IN_CLOSE_WRITE" type="int" value="IN_CLOSE_WRITE"/>
+ <constant name="IN_CLOSE_NOWRITE" type="int" value="IN_CLOSE_NOWRITE"/>
+ <constant name="IN_CLOSE" type="int" value="IN_CLOSE"/>
+ <constant name="IN_CREATE" type="int" value="IN_CREATE"/>
+ <constant name="IN_DELETE" type="int" value="IN_DELETE"/>
+ <constant name="IN_DELETE_SELF" type="int" value="IN_DELETE_SELF"/>
+ <constant name="IN_MODIFY" type="int" value="IN_MODIFY"/>
+ <constant name="IN_MOVE_SELF" type="int" value="IN_MOVE_SELF"/>
+ <constant name="IN_MOVED_FROM" type="int" value="IN_MOVED_FROM"/>
+ <constant name="IN_MOVED_TO" type="int" value="IN_MOVED_TO"/>
+ <constant name="IN_MOVE" type="int" value="IN_MOVE"/>
+ <constant name="IN_OPEN" type="int" value="IN_OPEN"/>
+ <constant name="IN_DONT_FOLLOW" type="int" value="IN_DONT_FOLLOW"/>
+ <constant name="IN_MASK_ADD" type="int" value="IN_MASK_ADD"/>
+ <constant name="IN_ONESHOT" type="int" value="IN_ONESHOT"/>
+ <constant name="IN_ONLYDIR" type="int" value="IN_ONLYDIR"/>
+ <constant name="IN_IGNORED" type="int" value="IN_IGNORED"/>
+ <constant name="IN_ISDIR" type="int" value="IN_ISDIR"/>
+ <constant name="IN_Q_OVERFLOW" type="int" value="IN_Q_OVERFLOW"/>
+ <constant name="IN_UNMOUNT" type="int" value="IN_UNMOUNT"/>
+ <constant name="IN_ALL_EVENTS" type="int" value="IN_ALL_EVENTS"/>
+ <function name="inotifytools_initialize">
+  <proto>bool inotifytools_initialize()</proto>
+  <code>
+    RETURN_BOOL(inotifytools_initialize());
+  </code>
+  <test><code>echo "OK";</code></test>
+ </function>
+ <function name="inotifytools_error">
+  <proto>int inotifytools_error()</proto>
+  <code>
+    RETURN_LONG(inotifytools_error());
+  </code>
+  <test><code>echo "OK";</code></test>
+ </function>
+ <function name="inotifytools_event_to_str">
+  <proto>string inotifytools_event_to_str(int event)</proto>
+  <code>
+    RETURN_STRING(inotifytools_event_to_str(event), 1);
+  </code>
+  <test><code>echo "OK";</code></test>
+ </function>
+ <function name="inotifytools_watch_recursively">
+  <proto>int inotifytools_watch_recursively(string path, int event)</proto>
+  <code>
+    RETURN_LONG(inotifytools_watch_recursively(path, event));
+  </code>
+  <test><code>echo "OK";</code></test>
+ </function>
+ <function name="inotifytools_next_event">
+  <proto>mixed inotifytools_next_event(int timeout)</proto>
+  <code>
+    struct inotify_event *ev;
+    ev = inotifytools_next_event(timeout);
+    if (!ev) RETURN_NULL();
+    array_init(return_value);
+    add_assoc_long(return_value, "wd", ev->wd);
+    add_assoc_long(return_value, "mask", ev->mask);
+    add_assoc_long(return_value, "cookie", ev->cookie);
+    add_assoc_stringl(return_value, "name", ev->name, ev->len, 1);
+    add_assoc_long(return_value, "wd", ev->wd);
+  </code>
+  <test><code>echo "OK";</code></test>
+ </function>
+ <test>
+  <code>
+<![CDATA[
+if (!extension_loaded('inotifytools')) @dl('inotifytools.so');
+function inotifytools_test($ip) {
+}
+]]>
+  </code>
+ </test>
+</extension>
